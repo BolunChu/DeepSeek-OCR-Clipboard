@@ -56,6 +56,7 @@ class SettingsDialog(ctk.CTkToplevel):
         self.key_entry = ctk.CTkEntry(self, width=entry_width, show="*")
         self.key_entry.insert(0, self.config_manager.get("api_key", ""))
         self.key_entry.grid(row=2, column=1, sticky="w", padx=20, pady=5)
+
         
         # Model
         ctk.CTkLabel(self, text="Model:").grid(row=3, column=0, sticky="e", padx=20, pady=5)
@@ -99,6 +100,18 @@ class ClipboardOCRApp(ctk.CTk):
         
         # Thread checking loop
         self.after(1000, self.check_clipboard_loop)
+        
+        # Check API Key on startup
+        self.after(500, self.check_api_key)
+
+    def check_api_key(self):
+        key = self.config_manager.get("api_key")
+        if not key or key == "YOUR_API_KEY_HERE":
+            response = messagebox.askyesno("配置缺失", "未检测到有效的 DeepSeek API Key。\n\n是否立即前往设置？\n(您也可以设置环境变量 DEEPSEEK_API_KEY)")
+            if response:
+                self.open_settings()
+            else:
+                 self.status_bar.configure(text="Warning: No API Key configured")
 
     def setup_ui(self):
         # Configure layout weights

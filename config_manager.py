@@ -1,7 +1,9 @@
 import json
 import os
 
-CONFIG_FILE = "config.cfg"
+# Get the absolute path to the directory where this file is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = os.path.join(current_dir, "config.cfg")
 
 DEFAULT_CONFIG = {
     "api_url": "https://api.siliconflow.cn/v1/chat/completions",
@@ -17,13 +19,25 @@ class ConfigManager:
     def load_config(self):
         if not os.path.exists(self.config_file):
             self.save_config(DEFAULT_CONFIG)
-            return DEFAULT_CONFIG
+            config = DEFAULT_CONFIG.copy()
+            # Still check env var even if new config created
+            env_key = os.environ.get("DEEPSEEK_API_KEY")
+            if env_key:
+                config["api_key"] = env_key
+            return config
         
         try:
             with open(self.config_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                config = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return DEFAULT_CONFIG
+            config = DEFAULT_CONFIG.copy()
+
+        # Environment variable override for API Key
+        env_key = os.environ.get("DEEPSEEK_API_KEY")
+        if env_key:
+            config["api_key"] = env_key
+            
+        return config
 
     def save_config(self, config_data):
         self.config = config_data

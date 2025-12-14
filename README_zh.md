@@ -55,8 +55,16 @@
    - 点击右上角的 **Settings (设置)** 按钮。
    - 输入您的 **API Key** (API URL 和模型默认已填好)。
    - 点击 **Save (保存)**。
+   - **提示**：您也可以点击 "获取 Key" 按钮跳转到 SiliconFlow 控制台。
 
-3. **开始 OCR**：
+3. **使用环境变量** (可选)：
+   您可以在启动应用前设置环境变量 `DEEPSEEK_API_KEY`，应用将自动读取该变量作为 API Key。
+   ```bash
+   export DEEPSEEK_API_KEY="sk-..."
+   python main.py
+   ```
+
+4. **开始 OCR**：
    - 使用截图工具 (如 Cmd+Shift+4) 或复制网页图片。
    - 应用会自动显示预览并开始识别。
    - 可以在顶部工具栏切换 **Mode (模式)** 来获得不同的输出格式。
